@@ -3,10 +3,10 @@ pipeline {
     label "jenkins-go"
   }
   environment {
-    ORG = 'jim-duwaldt-com'
+    ORG = 'jduwaldt'
     APP_NAME = 'go-proj2'
     CHARTMUSEUM_CREDS = credentials('jenkins-x-chartmuseum')
-    DOCKER_REGISTRY_ORG = 'jim@duwaldt.com'
+    DOCKER_REGISTRY_ORG = 'jduwaldt'
   }
   stages {
     stage('CI Build and push snapshot') {
@@ -20,13 +20,13 @@ pipeline {
       }
       steps {
         container('go') {
-          dir('/home/jenkins/go/src/github.com/jim-duwaldt-com/go-proj2') {
+          dir('/home/jenkins/go/src/github.com/jduwaldt/go-proj2') {
             checkout scm
             sh "make linux"
             sh "export VERSION=$PREVIEW_VERSION && skaffold build -f skaffold.yaml"
             sh "jx step post build --image $DOCKER_REGISTRY/$ORG/$APP_NAME:$PREVIEW_VERSION"
           }
-          dir('/home/jenkins/go/src/github.com/jim-duwaldt-com/go-proj2/charts/preview') {
+          dir('/home/jenkins/go/src/github.com/jduwaldt/go-proj2/charts/preview') {
             sh "make preview"
             sh "jx preview --app $APP_NAME --dir ../.."
           }
@@ -39,7 +39,7 @@ pipeline {
       }
       steps {
         container('go') {
-          dir('/home/jenkins/go/src/github.com/jim-duwaldt-com/go-proj2') {
+          dir('/home/jenkins/go/src/github.com/jduwaldt/go-proj2') {
             checkout scm
 
             // ensure we're not on a detached head
